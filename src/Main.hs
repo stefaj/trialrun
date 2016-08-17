@@ -11,11 +11,12 @@ main = quickHttpServe site
 
 site :: Snap ()
 site =
-    ifTop (writeBS "hello world") <|>
+    ifTop (serveFile "web/index.html") <|>
     route [ ("foo", writeBS "bar")
           , ("echo/:echoparam", echoHandler)
           ] <|>
-    dir "static" (serveDirectory ".")
+    serveDirectory "web"
+    -- dir "web" (serveDirectory ".")
 
 echoHandler :: Snap ()
 echoHandler = do
