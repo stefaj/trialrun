@@ -11,6 +11,8 @@ import qualified Pipes.ByteString as P
 import Pipes.Concurrent
 import System.Process
 import System.IO
+import Criterion.Measurement
+import System.Timeout
 
 writeToFile :: Handle -> FilePath -> IO ()
 writeToFile handle path = 
@@ -18,8 +20,13 @@ writeToFile handle path =
                 runEffect $ P.fromHandle handle >-> P.toHandle hOut)
             (hClose handle) 
 
-startProcess :: String -> [String] -> IO (String, String)
-startProcess name args = do
+data ProcessResult = ProcessResult {pr_output :: String, pr_time :: Float}
+
+data Error = Error String                                                                                                                                                                                                                                                          
+
+
+startProcess :: String -> [String] -> IO Either (Error, ProcessResult)
+startProcess name args maxTime = do
    (_,mOut,mErr,procHandle) <- createProcess $ 
         (proc name args) { std_out = CreatePipe
                                 , std_err = CreatePipe 
@@ -30,7 +37,16 @@ startProcess name args = do
 --    a1 <- async $ writeToFile hOut "stdout.txt" 
 --    a2 <- async $ writeToFile hErr "stderr.txt" 
 --    waitBoth a1 a2o
-   (,) <$> (hGetContents hOut) <*> (hGetContents hErr)
-
-
-
+--
+   t <- getTime
+   exitCode <- timeout maxTime $ waitForProcess procHandle
+   case exitCode of 
+    Nothing -> do
+            terminateProcess procHandle
+            return $ Left $ "Timeout"
+    Just ExitSuccess -> do res <- hGetContents hOut
+                           t' <- getTime
+                           return $ Right $ ProcessResult res (t' - t)
+    Just ExitFailure -> do res <- hGetContents hErr
+                           return $ Left $ Error res
+    

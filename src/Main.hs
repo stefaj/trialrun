@@ -10,6 +10,7 @@ import Process
 import Control.Monad.Trans
 import System.Directory
 import Data.Monoid
+import Criterion.Measurement
 
 import Prelude hiding (writeFile)
 
