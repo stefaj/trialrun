@@ -29,6 +29,8 @@ executable trialrun
                        transformers,
                        directory,
                        bytestring,
+                       base64-bytestring,
+                       cryptohash,
                        mtl,
                        async,
                        pipes,
