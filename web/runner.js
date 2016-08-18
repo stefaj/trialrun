@@ -13,16 +13,17 @@ function sendHttp(method, url, body, callback) {
 }
 
 run = function(){
-  var editor = ace.edit("aceEditor");
-  var code = editor.getValue();
+    var editor = ace.edit("editor");
+    var code = editor.getValue();
 
-  sendHttp('GET', 'clientId.txt', null, function(request) {
-      if (request.status != 200 || request.responseText == '') {
-          sweetAlert('Oops!', 'Missing API client key.  You will not be able to sign in.', 'warning');
-          return null;
-      }
+    var data = new FormData();
+    data.append('compiler', 'ghc'); 
+    data.append('source', code);
 
-      window.clientId = request.responseText.trim();
-      return f(window.clientId);
-  });
+    sendHttp('POST', 'compile', data, function(request) {
+        if (request.status == 200) {
+        }
+        console.log(request.response);
+
+    });
 }

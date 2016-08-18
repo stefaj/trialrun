@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>ACE in Action</title>
+<title>Trial Run</title>
 
 <!-- Latest compiled and minified CSS -->
 
@@ -15,6 +15,7 @@
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="runner.js"></script>
 
 <style type="text/css" media="screen">
    #editor {
@@ -57,9 +58,6 @@
 
         <div class="panel-body" id="demo">
             sdfs
-            sdfsdfsdf
-            sdfsdf
-            fsdfsdf
             sdfsdff
         </div>
   </div>
@@ -74,8 +72,8 @@
              <h3 class="panel-title">Control</h3>
         </div>
         <div class="panel-body">
-<button type="button" class="btn btn-primary">Run</button>
-<button type="button" class="btn btn-danger">Stop</button>
+          <button type="button" class="btn btn-primary" onclick="run()">Run</button>
+          <button type="button" class="btn btn-danger">Stop</button>
         </div>
   </div>
   <div class="panel panel-default">
@@ -96,10 +94,8 @@
              <h3 class="panel-title">Editor</h3>
         </div>
         <div class="panel-body">
-            <div id="editor">function foo(items) {
-                var x = "All this is syntax highlighted";
-                return x;
-            }</div>
+            <div id="editor">main = putStrLn "foo"
+            </div>
         </div>
     </div>
   </div>
