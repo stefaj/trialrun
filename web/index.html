@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 <!-- Optional theme -->
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+<link rel="stylesheet" href="bootstrap.min.css" >
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
@@ -26,7 +26,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-default navbar-fixed-top">
   <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -57,8 +57,8 @@
         </div>
 
         <div class="panel-body" id="demo">
-            sdfs
-            sdfsdff
+          <p>There is no spoon</p>
+          <p>The spoon is a lie</p>
         </div>
   </div>
 </div>
@@ -74,6 +74,8 @@
         <div class="panel-body">
           <button type="button" class="btn btn-primary" onclick="run()">Run</button>
           <button type="button" class="btn btn-danger">Stop</button>
+
+        <!-- end panel body -->
         </div>
   </div>
   <div class="panel panel-default">
@@ -83,6 +85,17 @@
         <div class="panel-body">
         </div>
   </div>
+
+  <div class="panel panel-default">
+        <div class="panel-heading">
+             <h3 class="panel-title">Output</h3>
+        </div>
+        <div class="panel-body">
+          <pre id="output"></pre>
+        </div>
+  </div>
+
+
 
 </div>
 
@@ -111,8 +124,8 @@
 <script src="./ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/javascript");
+    editor.setTheme("ace/theme/tomorrow");
+    editor.getSession().setMode("ace/mode/haskell");
 </script>
 </body>
 </html>

@@ -23,7 +23,7 @@ run = function(){
     sendHttp('POST', 'compile', data, function(request) {
         if (request.status == 200) {
         }
-        console.log(request.response);
 
+        document.getElementById('output').innerHTML = request.response;
     });
 }
