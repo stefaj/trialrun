@@ -1,4 +1,7 @@
-module Process (startProcess)
+module Process (startProcess, 
+                Time(..), 
+                ProcessResult(..)
+               )
   where
 
 import Control.Applicative
@@ -11,8 +14,10 @@ import qualified Pipes.ByteString as P
 import Pipes.Concurrent
 import System.Process
 import System.IO
+import System.Exit
 import Criterion.Measurement
 import System.Timeout
+import Error
 
 writeToFile :: Handle -> FilePath -> IO ()
 writeToFile handle path = 
@@ -20,13 +25,12 @@ writeToFile handle path =
                 runEffect $ P.fromHandle handle >-> P.toHandle hOut)
             (hClose handle) 
 
-data ProcessResult = ProcessResult {pr_output :: String, pr_time :: Float}
+data ProcessResult = ProcessResult {pr_output :: String, pr_time :: Double}
 
-data Error = Error String                                                                                                                                                                                                                                                          
+data Time = Microseconds Int
 
-
-startProcess :: String -> [String] -> IO Either (Error, ProcessResult)
-startProcess name args maxTime = do
+startProcess :: String -> [String] -> Time -> IO (Either Error ProcessResult)
+startProcess name args (Microseconds maxTime) = do
    (_,mOut,mErr,procHandle) <- createProcess $ 
         (proc name args) { std_out = CreatePipe
                                 , std_err = CreatePipe 
@@ -43,10 +47,10 @@ startProcess name args maxTime = do
    case exitCode of 
     Nothing -> do
             terminateProcess procHandle
-            return $ Left $ "Timeout"
+            return $ Left $ Timeout
     Just ExitSuccess -> do res <- hGetContents hOut
                            t' <- getTime
                            return $ Right $ ProcessResult res (t' - t)
-    Just ExitFailure -> do res <- hGetContents hErr
-                           return $ Left $ Error res
+    Just (ExitFailure _) -> do res <- hGetContents hErr
+                               return $ Left $ Timeout 
     

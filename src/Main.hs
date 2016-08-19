@@ -1,12 +1,14 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE RecordWildCards #-}
+
 module Main where
 
 import Control.Applicative
 import Snap.Core
 import Snap.Util.FileServe
 import Snap.Http.Server
-import Process
+import qualified Process as P
 import Control.Monad.Trans
 import System.Directory
 import Data.Monoid
@@ -94,33 +96,33 @@ type Code = ByteString
 
 data CompileResult = CompileResult {cr_time :: Float, cr_result :: String, cr_file :: String}
 
-data Error = Error String
-
-data RunResult = RunResult {rr_time :: Float, rr_result :: String}
+data RunResult = RunResult {rr_time :: Float, rr_output :: String}
 
 runFile :: String -> IO (Either Error RunResult )
 runFile filename = do
-  (o,e) <- startProcess filename []
-  return $ Right $ RunResult 0 (o <> e)
+  res <- P.startProcess filename []
+  case res of
+    Left e -> return $ Left e
+    Right {..} -> return $ Right $ RunResult pr_time pr_output  
+    
 
 runCompiler :: Compiler -> Code -> IO (Either Error CompileResult )
 runCompiler comp code = do
   let ext = getCompilerExt comp
   let hash = getHash code 
 
-  let outFile = "data/" <> (BC.unpack hash)
+  let outFile = "data/" <> BC.unpack hash
 
   let filename = outFile <> ext
   writeFile filename code
 
   let (exec, args)  = getCompilerArgs comp filename outFile
 
-  (o,e) <- startProcess exec $ args <> [filename]
+  res <- P.startProcess exec $ args <> [filename]
+  case res of
+    Left e -> return $ Left e
+    Right {..} -> return $ Right $ CompileResult pr_time pr_output outFile
 
-  if(null e) then
-    return $ Right $ CompileResult 0 o outFile
-  else
-    return $ Left $ Error e
 
 getHash :: ByteString -> ByteString
 getHash = BC.takeWhile (/= '=') . BC.map toWebSafe . B64.encode . Crypto.hash
