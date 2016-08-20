@@ -16,7 +16,8 @@
 #  name: custom-snapshot
 #  location: "./custom-snapshot.yaml"
 # resolver: nightly-2016-08-16
-resolver: lts-6.10 
+#resolver: lts-6.10 
+resolver: nightly-2016-08-19
 
 
 # User packages to be built.
@@ -39,9 +40,16 @@ resolver: lts-6.10
 # will not be run. This is useful for tweaking upstream packages.
 packages:
 - '.'
+- location:
+        git: https://github.com/bos/criterion.git
+        commit: fa9232a196f768336eead55b360c8c6b3c121f42
+#- location:
+#        git: https://github.com/snapframework/snap.git
+#        commit: a6064a7630c14fdcc3093264d35a8df4ce82a64a
+
 # Dependency packages to be pulled from upstream that are not in the resolver
 # (e.g., acme-missiles-0.3)
-extra-deps: []
+extra-deps: [criterion-1.1.3.1]
 
 # Override default flag values for local packages and extra-deps
 flags: {}
