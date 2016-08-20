@@ -1,4 +1,4 @@
-module Errors 
+module Error 
         (Error(..))
   where
 
